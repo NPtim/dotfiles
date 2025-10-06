@@ -2,7 +2,19 @@
 
 {
   programs = {
-    firefox.enable = false;
+    firefox = {
+      enable = false;
+
+      profiles.default = {
+        settings = {
+          "browser.startup.page" = 3;  # 3 bedeutet „Vorherige Sitzung laden“
+          "browser.sessionstore.resume_from_crash" = true;
+          "browser.sessionstore.resume_session_once" = false;
+          "browser.sessionstore.resuming_after_os_restart" = true;
+        };
+      };
+
+    };
     kitty = {
       enable = true;
       # themeFile = "3024_Night";
