@@ -92,6 +92,21 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
+  # GNOME old window controls
+  programs.dconf = {
+    enable = true;
+    profiles.user.databases = [
+      {
+        lockAll = true;
+        settings = {
+          "org/gnome/desktop/wm/preferences" = {
+            button-layout = ":minimize,maximize,close";
+          };
+        };
+      }
+    ];
+  };
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "de";
@@ -142,7 +157,7 @@
   programs.nh = {
     enable = true;
     clean.enable = true;
-    flake = "/home/tim/dotfiles";
+    flake = "/home/tim/dotfiles"; # TODO
   };
 
   programs.nix-ld = {
