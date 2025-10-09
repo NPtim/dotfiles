@@ -142,6 +142,7 @@
   programs.nh = {
     enable = true;
     clean.enable = true;
+    flake = "/home/tim/dotfiles";
   };
 
   programs.nix-ld = {
