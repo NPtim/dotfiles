@@ -56,6 +56,13 @@
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
+  systemd.sleep.extraConfig = ''
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
+
   # Networking 
   networking.hostName = "tims-nixos-machine"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -180,6 +187,8 @@
       libGL
       libGLU
       glew
+
+      zlib zstd bzip2 libffi openssl /*stdenzlib*/ zstd bzip2 libffi openssl stdenv.cc.cc.lib
     ];
   };
 
