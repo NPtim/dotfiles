@@ -37,19 +37,14 @@
           shellHook = '' echo "Entered devshell for nerfstudio"'';
         };
 
-        pip2nix = pkgs.mkShell {
+        pip = pkgs.mkShell {
           packages = with pkgs; [
             (python311.withPackages (p: with p; [
               pip wheel
             ]))
-            pkg-config
-            ffmpeg.dev
-            git
           ];
-
-          env.PIP_ONLY_BINARY=":all:";
-          env.PKG_CONFIG_PATH="${pkgs.ffmpeg.dev}/lib/pkgconfig";
         };
+
         first-try = pkgs.mkShell {
           name = "nerfstudio-shell-for-gs";
 
