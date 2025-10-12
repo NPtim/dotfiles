@@ -14,6 +14,12 @@ in
       transparent = true;
     };
 
+    # clipboard
+    clipboard = {
+      enable = true;
+      providers.xclip.enable = true;
+    };
+
     ui.borders = {
       enable = true;
       globalStyle = "rounded";
@@ -35,6 +41,8 @@ in
 
       number = true;
       relativenumber = false;
+
+      wrap = false;
     };
 
     # plugins
