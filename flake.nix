@@ -20,6 +20,11 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
+      splines-0-3-0 = pkgs.callPackage ./python-pkgs/splines-0-3-0/default.nix {
+        inherit (pkgs) lib buildPythonPackage fetchPypi;
+        inherit (py) setuptools wheel numpy;
+      };
+
       open3d-0-19-0 = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
         inherit (pkgs) lib stdenv fetchFromGitHub cmake;
       };
