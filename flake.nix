@@ -20,6 +20,10 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
+      nuscenes-devkit-1-2-0 = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
+        inherit (pkgs) lib stdenv fetchFromGithub;
+      };
+
       nerfacc-0-5-2-python-package = pkgs.callPackage ./python-pkgs/nerfacc-0-5-2/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
@@ -64,6 +68,7 @@
         fpsample = fpsample-0-3-3-python-package;
         gsplat = gsplat-1-4-0-python-package;
         nerfacc = nerfacc-0-5-2-python-package;
+        nuscenes-devkit = nuscenes-devkit-1-2-0;
       };
     in
       {

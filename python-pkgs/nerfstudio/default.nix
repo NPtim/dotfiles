@@ -5,7 +5,8 @@
   comet-ml,
   fpsample,
   gsplat,
-  nerfacc
+  nerfacc,
+  nuscenes-devkit
 }:
 
 python3.pkgs.buildPythonApplication rec {
