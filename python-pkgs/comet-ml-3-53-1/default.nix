@@ -19,9 +19,6 @@
   urllib3,
   wrapt,
   wurlitzer,
-  
-  # eigene packages
-  everett
 }:
 
 buildPythonPackage rec {

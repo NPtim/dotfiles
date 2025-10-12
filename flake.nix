@@ -19,15 +19,29 @@
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
-
-      comet-ml-3-53-1-python-package = pkgs.callPackage ./python-pkgs/comet-ml/default.nix {
+      fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {
+        inherit (pkgs) lib fetchFromGitHub cargo patchelf rustPlatform rustc;
+        inherit (py)
+        buildPythonPackage numpy;
+      };
+      everett-3-1-0-python-package = pkgs.callPackage ./python-pkgs/everett-3-1-0/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
-        buildPythonPackage setuptools wheel dulwich everett importlib-metadata
+        buildPythonPackage setuptools wheel build cogapp mypy pytest ruff sphinx
+        sphinx-rtd-theme tox tox-gh-actions tox-uv twine types-pyyaml configobj
+        pyyaml;
+      };
+
+      comet-ml-3-53-1-python-package = pkgs.callPackage ./python-pkgs/comet-ml-3-53-1/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel dulwich; everett = everett-3-1-0-python-package; 
+        inherit (py)
+        importlib-metadata
         jsonschema psutil python-box requests requests-toolbelt rich
         semantic-version sentry-sdk simplejson urllib3 wrapt wurlitzer;
       };
-      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3; comet-ml = comet-ml-3-53-1-python-package;};
+      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3; comet-ml = comet-ml-3-53-1-python-package; fpsample = fpsample-0-3-3-python-package;};
     in
       {
       tims-neovim = (nvf.lib.neovimConfiguration {
