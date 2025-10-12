@@ -99,6 +99,17 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
+  # enable rdp
+  services.gnome.gnome-remote-desktop.enable = true;
+  networking.firewall.allowedTCPPorts = [ 3389 ];
+
+  systemd.services.gnome-remote-desktop = {
+    wantedBy = [ "graphical.target" ];
+  };
+
+  services.displayManager.autoLogin.enable = false;
+  services.getty.autologinUser = null;
+
   # GNOME old window controls
   programs.dconf = {
     enable = true;
@@ -111,8 +122,21 @@
           };
         };
       }
+      {
+      lockAll = false;
+      settings = {
+        "org/gnome/desktop/remote-desktop/rdp" = {
+          enable = true;                         # bool
+          port = pkgs.lib.gvariant.mkUint16 3389;     # <- wichtig: typisierter GVariant
+          view-only = false;                     # bool
+          "screen-share-mode" = "mirror-primary";# string (falls Schema vorhanden)
+        };
+      };
+    }
     ];
   };
+
+  programs.tmux.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -202,6 +226,8 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
     spotify
+    libreoffice-qt6-fresh
+    signal-desktop
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -215,7 +241,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

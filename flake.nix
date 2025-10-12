@@ -14,9 +14,9 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      pythonEnv = pkgs.python3.withPackages (ps: with ps; [
-        pip setuptools wheel ninja
-      ]);
+      #pythonEnv = pkgs.python3.withPackages (ps: with ps; [
+      #pip setuptools wheel ninja
+      #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
     in
       {
@@ -26,43 +26,87 @@
       }).neovim;
 
       # gaussian splatting dev shell
-      devShells.${system}.default = pkgs.mkShell {
-        name = "nerfstudio-shell-for-gs";
+      devShells.${system} = {
+        pip2nix = pkgs.mkShell {
+          packages = with pkgs; [
+            (python311.withPackages (p: with p; [
+              pip wheel
+            ]))
+            pkg-config
+            ffmpeg.dev
+            git
+          ];
 
-        packages = [
-          pkgs.xorg.libX11 pkgs.xorg.libXext pkgs.xorg.libXi pkgs.xorg.libXrandr pkgs.xorg.libXfixes
-          pkgs.xorg.libXcursor pkgs.xorg.libXinerama
-          pkgs.libGL pkgs.libGLU pkgs.glew
-          pkgs.ffmpeg
+          env.PIP_ONLY_BINARY=":all:";
+          env.PKG_CONFIG_PATH="${pkgs.ffmpeg.dev}/lib/pkgconfig";
+        };
+        first-try = pkgs.mkShell {
+          name = "nerfstudio-shell-for-gs";
 
-          pythonEnv
-          pkgs.cmake
-          pkgs.pkg-config
-          # pkgs.gcc11
-          cuda
-          pkgs.systemd
-          pkgs.colmap
-        ];
+          packages = with pkgs; [
+            # Grafik + GL
+            xorg.libX11 xorg.libXext xorg.libXi xorg.libXrandr xorg.libXfixes
+            xorg.libXcursor xorg.libXinerama xorg.libXrender xorg.libxcb xorg.libXau xorg.libXdmcp
+            libGL libGLU glew
 
-        shellHook = ''
-          export CUDA_HOME=${cuda}
-          export CUDACXX=${cuda}/bin/nvcc
-          export QT_QPA_PLATFORM=xcb
+            # Tools
+            ffmpeg cmake pkg-config colmap glxinfo
 
-          NEW_LD="/run/opengl-driver/lib:/run/opengl-driver-32/lib:${pkgs.lib.makeLibraryPath [
-            pkgs.xorg.libX11 pkgs.xorg.libXext pkgs.xorg.libXi pkgs.xorg.libXrandr pkgs.xorg.libXfixes
-            pkgs.xorg.libXcursor pkgs.xorg.libXinerama pkgs.xorg.libXrender pkgs.xorg.libxcb pkgs.xorg.libXau pkgs.xorg.libXdmcp
-            pkgs.libGL pkgs.libGLU pkgs.glew pkgs.systemd pkgs.gcc14.cc.lib
-          ]}"
+            # Python Bootstrap
+            (python311.withPackages (ps: with ps; [ pip setuptools wheel ninja opencv4 /*pycolmap*/ ]))
 
-          if [ -n "$LD_LIBRARY_PATH" ]; then
-            export LD_LIBRARY_PATH="$NEW_LD:$LD_LIBRARY_PATH"
-          else
-            export LD_LIBRARY_PATH="$NEW_LD"
-          fi
+            # CUDA Toolkit ist optional für Kompilate – PyTorch-Wheels bringen i.d.R. CUDA-Runtime mit.
+            cudaPackages.cudatoolkit
 
-          export __GLX_VENDOR_LIBRARY_NAME=nvidia
-        '';
+            # **Wichtig für Pip-Wheels zur Laufzeit**:
+            zlib zstd bzip2 libffi openssl
+            stdenv.cc.cc.lib  # libstdc++.so.6, libgcc_s.so.1
+            systemd
+
+            # für cv2, damit er libgthread-2.0.so.0 findet
+          ];
+
+          shellHook = ''
+            # Wayland -> XCB, sonst Qt/GL Ärger
+            export QT_QPA_PLATFORM=wayland
+
+            # Sorge dafür, dass NVIDIA-GL wirklich benutzt wird:
+            export __GLX_VENDOR_LIBRARY_NAME=nvidia
+            export LIBGL_DRIVERS_PATH=/run/opengl-driver/lib/dri
+
+            # Triton braucht die libcuda.so
+            export TRITON_LIBCUDA_PATH=/run/opengl-driver/lib
+
+            # für bessere TF32-Performance
+            export TORCH_ALLOW_TF32=1
+
+            # Tuning für das eigentliche training
+            export TORCH_FLOAT32_MATMUL_PRECISION=high
+            export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True,max_split_size_mb:64,garbage_collection_threshold:0.9"
+
+
+            # Runtime-Libs für Pip-Wheels (NumPy, OpenCV, PyTorch, …)
+            EXTRA_LIBS="${pkgs.lib.makeLibraryPath [
+                pkgs.zlib pkgs.zstd pkgs.bzip2 pkgs.libffi pkgs.openssl
+                pkgs.xorg.libX11 pkgs.xorg.libXext pkgs.xorg.libXi pkgs.xorg.libXrandr pkgs.xorg.libXfixes
+                pkgs.xorg.libXcursor pkgs.xorg.libXinerama pkgs.xorg.libXrender pkgs.xorg.libxcb pkgs.xorg.libXau pkgs.xorg.libXdmcp
+                pkgs.libGL pkgs.libGLU pkgs.glew
+                pkgs.stdenv.cc.cc.lib
+                pkgs.systemd
+                pkgs.glib
+              ]}"
+            RENDERER_LIBS="/run/opengl-driver/lib:/run/opengl-driver-32/lib"
+
+            if [ -n "$LD_LIBRARY_PATH" ]; then
+              export LD_LIBRARY_PATH="$EXTRA_LIBS:$RENDERER_LIBS:$LD_LIBRARY_PATH"
+            else
+              export LD_LIBRARY_PATH="$EXTRA_LIBS:$RENDERER_LIBS"
+            fi
+
+            echo "[nerfstudio-gpu-shell] LD_LIBRARY_PATH prepared."
+            echo "[nerfstudio-gpu-shell] OpenGL renderer should be NVIDIA. Test mit: glxinfo | grep 'OpenGL renderer'"
+          '';
+        };
       };
 
       nixosConfigurations = {

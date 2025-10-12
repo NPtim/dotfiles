@@ -24,5 +24,19 @@
     };
   };
 
+  programs.vscode.enable = true;
+
+  # Mail
+
+  #programs.thunderbird = {
+  #  enable = true;
+  #profiles."tim" = {
+  #isDefault = true;
+  #};
+  #};
+
+  #accounts.email.accounts."uni" = {
+  #};
+
   home.stateVersion = "25.05";
 }
