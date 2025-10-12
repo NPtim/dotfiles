@@ -20,13 +20,21 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
+      yourdfpy-0-0-58-python-package = pkgs.callPackage ./python-pkgs/yourdfpy-0-0-58/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools setuptools-scm wheel importlib-metadata
+        lxml numpy six trimesh pyglet pytest pytest-cov;
+      };
+
       viser-1-0-0-python-package = pkgs.callPackage ./python-pkgs/viser-1-0-0/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
         buildPythonPackage hatchling imageio msgspec nodeenv numpy opencv-python
         psutil requests rich scikit-image scipy tqdm trimesh tyro websockets
-        yourdfpy hypothesis pre-commit pyright pytest ruff gdown matplotlib
+        hypothesis pre-commit pyright pytest ruff gdown matplotlib
         pandas plotly plyfile pyliblzfse robot-descriptions torch;
+        yourdfpy = yourdfpy-0-0-58-python-package;
       };
 
       splines-0-3-0-python-package = pkgs.callPackage ./python-pkgs/splines-0-3-0/default.nix {
