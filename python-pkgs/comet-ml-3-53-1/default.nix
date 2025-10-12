@@ -1,10 +1,30 @@
 {
   lib,
-  python3,
+  buildPythonPackage,
   fetchPypi,
+  setuptools,
+  wheel,
+  dulwich,
+  everett,
+  importlib-metadata,
+  jsonschema,
+  psutil,
+  python-box,
+  requests,
+  requests-toolbelt,
+  rich,
+  semantic-version,
+  sentry-sdk,
+  simplejson,
+  urllib3,
+  wrapt,
+  wurlitzer,
+  
+  # eigene packages
+  everett
 }:
 
-python3.pkgs.buildPythonApplication rec {
+buildPythonPackage rec {
   pname = "comet-ml";
   version = "3.53.1";
   pyproject = true;
@@ -16,11 +36,11 @@ python3.pkgs.buildPythonApplication rec {
   };
 
   build-system = [
-    python3.pkgs.setuptools
-    python3.pkgs.wheel
+    setuptools
+    wheel
   ];
 
-  dependencies = with python3.pkgs; [
+  dependencies = [
     dulwich
     everett
     importlib-metadata
@@ -48,6 +68,5 @@ python3.pkgs.buildPythonApplication rec {
     homepage = "https://pypi.org/project/comet-ml/";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ ];
-    mainProgram = "comet-ml";
   };
 }

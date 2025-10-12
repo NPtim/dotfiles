@@ -14,12 +14,20 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      py = pkgs.python3Packages;
       #pythonEnv = pkgs.python3.withPackages (ps: with ps; [
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
-      comet-ml-python-package = import ./python-pkgs/comet-ml/default.nix {inherit (pkgs) lib python3 fetchPypi;};
-      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3; comet-ml = comet-ml-python-package;};
+
+      comet-ml-3-53-1-python-package = pkgs.callPackage ./python-pkgs/comet-ml/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel dulwich everett importlib-metadata
+        jsonschema psutil python-box requests requests-toolbelt rich
+        semantic-version sentry-sdk simplejson urllib3 wrapt wurlitzer;
+      };
+      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3; comet-ml = comet-ml-3-53-1-python-package;};
     in
       {
       tims-neovim = (nvf.lib.neovimConfiguration {

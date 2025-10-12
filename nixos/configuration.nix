@@ -202,6 +202,7 @@
     spotify
     libreoffice-qt6-fresh
     signal-desktop
+    jq
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
