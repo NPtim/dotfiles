@@ -4,7 +4,8 @@
   fetchFromGitHub,
   comet-ml,
   fpsample,
-  gsplat
+  gsplat,
+  nerfacc
 }:
 
 python3.pkgs.buildPythonApplication rec {

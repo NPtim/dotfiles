@@ -19,6 +19,13 @@
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
+
+      nerfacc-0-5-2-python-package = pkgs.callPackage ./python-pkgs/nerfacc-0-5-2/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel rich torch typing-extensions black
+        build isort ninja pylint pytest pytest-xdist pyyaml twine typeguard;
+      };
       
       gsplat-1-4-0-python-package = pkgs.callPackage ./python-pkgs/gsplat-1-4-0/default.nix {
         inherit (pkgs) lib fetchPypi;
@@ -33,6 +40,7 @@
         inherit (py)
         buildPythonPackage numpy;
       };
+
       everett-3-1-0-python-package = pkgs.callPackage ./python-pkgs/everett-3-1-0/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
@@ -55,6 +63,7 @@
         comet-ml = comet-ml-3-53-1-python-package; 
         fpsample = fpsample-0-3-3-python-package;
         gsplat = gsplat-1-4-0-python-package;
+        nerfacc = nerfacc-0-5-2-python-package;
       };
     in
       {
