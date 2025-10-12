@@ -7,7 +7,9 @@
   gsplat,
   nerfacc,
   nuscenes-devkit,
-  open3d
+  open3d,
+  splines,
+  viser
 }:
 
 python3.pkgs.buildPythonApplication rec {

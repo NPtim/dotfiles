@@ -20,16 +20,25 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
-      splines-0-3-0 = pkgs.callPackage ./python-pkgs/splines-0-3-0/default.nix {
-        inherit (pkgs) lib buildPythonPackage fetchPypi;
-        inherit (py) setuptools wheel numpy;
+      viser-1-0-0-python-package = pkgs.callPackage ./python-pkgs/viser-1-0-0/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage hatchling imageio msgspec nodeenv numpy opencv-python
+        psutil requests rich scikit-image scipy tqdm trimesh tyro websockets
+        yourdfpy hypothesis pre-commit pyright pytest ruff gdown matplotlib
+        pandas plotly plyfile pyliblzfse robot-descriptions torch;
       };
 
-      open3d-0-19-0 = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
+      splines-0-3-0-python-package = pkgs.callPackage ./python-pkgs/splines-0-3-0/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py) buildPythonPackage setuptools wheel numpy;
+      };
+
+      open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
         inherit (pkgs) lib stdenv fetchFromGitHub cmake;
       };
 
-      nuscenes-devkit-1-2-0 = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
+      nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
         inherit (pkgs) lib stdenv fetchFromGitHub;
       };
 
@@ -77,8 +86,10 @@
         fpsample = fpsample-0-3-3-python-package;
         gsplat = gsplat-1-4-0-python-package;
         nerfacc = nerfacc-0-5-2-python-package;
-        nuscenes-devkit = nuscenes-devkit-1-2-0;
-        open3d = open3d-0-19-0;
+        nuscenes-devkit = nuscenes-devkit-1-2-0-python-package;
+        open3d = open3d-0-19-0-python-package;
+        splines = splines-0-3-0-python-package;
+        viser = viser-1-0-0-python-package;
       };
     in
       {
