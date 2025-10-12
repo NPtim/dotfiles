@@ -43,7 +43,7 @@ python3.pkgs.buildPythonApplication rec {
     msgpack
     msgpack-numpy
     nerfacc
-    newrawpy
+    # newrawpy -> only arm64
     ninja
     nuscenes-devkit
     open3d
