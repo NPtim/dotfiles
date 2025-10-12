@@ -20,6 +20,13 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
+      python-box-6-1-0-python-package = pkgs.callPackage ./python-pkgs/python-box-6-1-0/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel msgpack ruamel-yaml toml pyyaml
+        tomli tomli-w;
+      };
+
       descartes-1-1-0-python-package = pkgs.callPackage ./python-pkgs/descartes-1-1-0/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
@@ -27,7 +34,7 @@
       };
 
       xatlas-0-0-11-python-package = pkgs.callPackage ./python-pkgs/xatlas-0-0-11/default.nix {
-        inherit (pkgs) lib fetchPypi;
+        inherit (pkgs) lib fetchPypi cmake ninja;
         inherit (py)
         buildPythonPackage scikit-build-core numpy pytest scipy trimesh;
       };
@@ -55,15 +62,16 @@
       };
 
       open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
-        inherit (pkgs) lib stdenv fetchFromGitHub cmake;
+        inherit (pkgs) lib fetchPypi;
+        inherit (py) buildPythonPackage setuptools wheel ipywidgets pygments jupyter-packaging jupyterlab;
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
         buildPythonPackage setuptools wheel cachetools fire matplotlib
-        numpy opencv-python-headless Pillow pyquaternion scikit-learn scipy
-        Shapely tqdm parameterized pycocotools;
+        numpy opencv-python-headless pillow pyquaternion scikit-learn scipy
+        shapely tqdm parameterized pycocotools;
         descartes = descartes-1-1-0-python-package;
       };
 
@@ -102,8 +110,9 @@
         buildPythonPackage setuptools wheel dulwich; everett = everett-3-1-0-python-package; 
         inherit (py)
         importlib-metadata
-        jsonschema psutil python-box requests requests-toolbelt rich
+        jsonschema psutil requests requests-toolbelt rich
         semantic-version sentry-sdk simplejson urllib3 wrapt wurlitzer;
+        python-box = python-box-6-1-0-python-package;
       };
       nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {
         inherit (pkgs) lib  fetchFromGitHub python3; 

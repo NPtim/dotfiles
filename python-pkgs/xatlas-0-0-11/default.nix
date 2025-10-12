@@ -7,6 +7,8 @@
   pytest,
   scipy,
   trimesh,
+  cmake,
+  ninja
 }:
 
 buildPythonPackage rec {
@@ -19,9 +21,18 @@ buildPythonPackage rec {
     hash = "sha256-cvC8bELBklK+h+lH2d/iUcjWxpQ/1D49Fz3caxr61pM=";
   };
 
+  nativeBuildInputs = [
+    cmake
+    ninja
+  ];
+
   build-system = [
     scikit-build-core
   ];
+
+  dontUseCmakeConfigure = true;
+  dontUseCmakeBuild = true;
+  dontUseCmakeInstall = true;
 
   optional-dependencies = {
     test = [

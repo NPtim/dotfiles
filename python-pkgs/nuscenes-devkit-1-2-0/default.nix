@@ -10,11 +10,11 @@
   matplotlib,
   numpy,
   opencv-python-headless,
-  Pillow,
+  pillow,
   pyquaternion,
   scikit-learn,
   scipy,
-  Shapely,
+  shapely,
   tqdm,
   parameterized,
   pycocotools,
@@ -42,11 +42,11 @@ buildPythonPackage rec {
     matplotlib
     numpy
     opencv-python-headless
-    Pillow
+    pillow
     pyquaternion
     scikit-learn
     scipy
-    Shapely
+    shapely
     tqdm
     parameterized
     pycocotools
