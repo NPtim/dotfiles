@@ -9,7 +9,8 @@
   nuscenes-devkit,
   open3d,
   splines,
-  viser
+  viser,
+  xatlas
 }:
 
 python3.pkgs.buildPythonApplication rec {

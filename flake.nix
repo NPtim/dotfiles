@@ -20,6 +20,12 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
+      xatlas-0-0-11-python-package = pkgs.callPackage ./python-pkgs/xatlas-0-0-11/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage scikit-build-core numpy pytest scipy trimesh;
+      };
+
       yourdfpy-0-0-58-python-package = pkgs.callPackage ./python-pkgs/yourdfpy-0-0-58/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
@@ -98,6 +104,7 @@
         open3d = open3d-0-19-0-python-package;
         splines = splines-0-3-0-python-package;
         viser = viser-1-0-0-python-package;
+        xatlas = xatlas-0-0-11-python-package;
       };
     in
       {
