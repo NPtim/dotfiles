@@ -20,6 +20,12 @@
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
 
+      descartes-1-1-0-python-package = pkgs.callPackage ./python-pkgs/descartes-1-1-0/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel matplotlib;
+      };
+
       xatlas-0-0-11-python-package = pkgs.callPackage ./python-pkgs/xatlas-0-0-11/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
@@ -53,7 +59,12 @@
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
-        inherit (pkgs) lib stdenv fetchFromGitHub;
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel cachetools fire matplotlib
+        numpy opencv-python-headless Pillow pyquaternion scikit-learn scipy
+        Shapely tqdm parameterized pycocotools;
+        descartes = descartes-1-1-0-python-package;
       };
 
       nerfacc-0-5-2-python-package = pkgs.callPackage ./python-pkgs/nerfacc-0-5-2/default.nix {

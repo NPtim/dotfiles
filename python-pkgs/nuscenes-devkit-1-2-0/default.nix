@@ -1,26 +1,65 @@
 {
   lib,
-  stdenv,
-  fetchFromGitHub,
+  buildPythonPackage,
+  fetchPypi,
+  setuptools,
+  wheel,
+  cachetools,
+  descartes,
+  fire,
+  matplotlib,
+  numpy,
+  opencv-python-headless,
+  Pillow,
+  pyquaternion,
+  scikit-learn,
+  scipy,
+  Shapely,
+  tqdm,
+  parameterized,
+  pycocotools,
 }:
 
-stdenv.mkDerivation rec {
+buildPythonPackage rec {
   pname = "nuscenes-devkit";
   version = "1.2.0";
+  pyproject = true;
 
-  src = fetchFromGitHub {
-    owner = "nutonomy";
-    repo = "nuscenes-devkit";
-    rev = version;
+  src = fetchPypi {
+    inherit pname version;
     hash = "sha256-/OEKECh1Js+4IXxV/d1uC+h7bViMzql/AWWNltSHNNA=";
   };
 
+  build-system = [
+    setuptools
+    wheel
+  ];
+
+  dependencies = [
+    cachetools
+    descartes
+    fire
+    matplotlib
+    numpy
+    opencv-python-headless
+    Pillow
+    pyquaternion
+    scikit-learn
+    scipy
+    Shapely
+    tqdm
+    parameterized
+    pycocotools
+  ];
+
+  pythonImportsCheck = [
+    "nuscenes-devkit"
+  ];
+
   meta = {
-    description = "The devkit of the nuScenes dataset";
-    homepage = "https://github.com/nutonomy/nuscenes-devkit/tree/1.2.0";
+    description = "The official devkit of the nuScenes dataset (www.nuscenes.org).";
+    homepage = "https://pypi.org/project/nuscenes-devkit/1.2.0/";
     license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [ ];
-    mainProgram = "nuscenes-devkit";
-    platforms = lib.platforms.all;
   };
 }
