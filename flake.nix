@@ -18,6 +18,7 @@
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
+      nerfstudio-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3;};
     in
       {
       tims-neovim = (nvf.lib.neovimConfiguration {
@@ -27,6 +28,15 @@
 
       # gaussian splatting dev shell
       devShells.${system} = {
+        nerfstudio = pkgs.mkShell {
+          packages = [
+            pkgs.python3
+            nerfstudio-package
+          ];
+
+          shellHook = '' echo "Entered devshell for nerfstudio"'';
+        };
+
         pip2nix = pkgs.mkShell {
           packages = with pkgs; [
             (python311.withPackages (p: with p; [
