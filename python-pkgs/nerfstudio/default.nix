@@ -6,7 +6,8 @@
   fpsample,
   gsplat,
   nerfacc,
-  nuscenes-devkit
+  nuscenes-devkit,
+  open3d
 }:
 
 python3.pkgs.buildPythonApplication rec {
