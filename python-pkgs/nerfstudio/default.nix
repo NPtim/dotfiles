@@ -2,6 +2,7 @@
   lib,
   python3,
   fetchFromGitHub,
+  comet-ml
 }:
 
 python3.pkgs.buildPythonApplication rec {

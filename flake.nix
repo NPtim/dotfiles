@@ -18,7 +18,8 @@
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
-      nerfstudio-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3;};
+      comet-ml-python-package = import ./python-pkgs/comet-ml/default.nix {inherit (pkgs) lib python3 fetchPypi;};
+      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3; comet-ml = comet-ml-python-package;};
     in
       {
       tims-neovim = (nvf.lib.neovimConfiguration {
@@ -31,7 +32,7 @@
         nerfstudio = pkgs.mkShell {
           packages = [
             pkgs.python3
-            nerfstudio-package
+            nerfstudio-python-package
           ];
 
           shellHook = '' echo "Entered devshell for nerfstudio"'';
