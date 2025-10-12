@@ -191,32 +191,6 @@
     flake = "/home/tim/dotfiles"; # TODO
   };
 
-  programs.nix-ld = {
-    enable = true;
-    libraries = with pkgs; [
-      # X11 + OpenGL, die Open3D beim Import nachlädt
-      xorg.libX11
-      xorg.libXext
-      xorg.libXi
-      xorg.libXrandr
-      xorg.libXfixes
-      xorg.libXcursor
-      xorg.libXinerama
-      xorg.libXrender
-      xorg.libxcb
-      xorg.libXau
-      xorg.libXdmcp
-
-      # OpenGL
-      libGL
-      libGLU
-      glew
-
-      zlib zstd bzip2 libffi openssl /*stdenzlib*/ zstd bzip2 libffi openssl stdenv.cc.cc.lib
-    ];
-  };
-
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
