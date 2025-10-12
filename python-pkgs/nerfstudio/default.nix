@@ -3,7 +3,8 @@
   python3,
   fetchFromGitHub,
   comet-ml,
-  fpsample
+  fpsample,
+  gsplat
 }:
 
 python3.pkgs.buildPythonApplication rec {

@@ -19,6 +19,15 @@
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
+      
+      gsplat-1-4-0-python-package = pkgs.callPackage ./python-pkgs/gsplat-1-4-0/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py)
+        buildPythonPackage setuptools wheel jaxtyping ninja numpy rich torch
+        typing-extensions black build isort pylint pytest pytest-xdist pyyaml
+        twine typeguard;
+      };
+
       fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {
         inherit (pkgs) lib fetchFromGitHub cargo patchelf rustPlatform rustc;
         inherit (py)
@@ -41,7 +50,12 @@
         jsonschema psutil python-box requests requests-toolbelt rich
         semantic-version sentry-sdk simplejson urllib3 wrapt wurlitzer;
       };
-      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {inherit (pkgs) lib  fetchFromGitHub python3; comet-ml = comet-ml-3-53-1-python-package; fpsample = fpsample-0-3-3-python-package;};
+      nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {
+        inherit (pkgs) lib  fetchFromGitHub python3; 
+        comet-ml = comet-ml-3-53-1-python-package; 
+        fpsample = fpsample-0-3-3-python-package;
+        gsplat = gsplat-1-4-0-python-package;
+      };
     in
       {
       tims-neovim = (nvf.lib.neovimConfiguration {
