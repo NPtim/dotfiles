@@ -28,15 +28,12 @@
 
   # Mail
 
-  #programs.thunderbird = {
-  #  enable = true;
-  #profiles."tim" = {
-  #isDefault = true;
-  #};
-  #};
-
-  #accounts.email.accounts."uni" = {
-  #};
+  programs.thunderbird = {
+    enable = true;
+    profiles."tim" = {
+      isDefault = true;
+    };
+  };
 
   home.stateVersion = "25.05";
 }
