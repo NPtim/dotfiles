@@ -1,15 +1,20 @@
 {
-  lib,
-  buildPythonPackage,
-  fetchurl,
-  pkgs
+  python3,
+  fetchPypi
 }:
 
-buildPythonPackage rec {
+python3.pkgs.buildPythonPackage rec {
   pname = "open3d";
   version = "0.19.0";
   format = "wheel";
 
+  src = fetchPypi rec {
+    inherit pname version format;
+    sha256 = "";
+    dist = python;
+    python = "py3";
+  };
+  /*
   src = fetchurl {
     url = "https://files.pythonhosted.org/packages/b7/52/1814945a5dfbb34c8c18c23f314b07e09be6f15db8adcf0a35d98edc1f43/open3d-0.19.0-cp38-cp38-manylinux_2_31_x86_64.whl";
     sha256 = "0lvlg8wcx7qgbhb8jkdfl3ib4jwwi9m64ks0a6w6gszkn7v44p9h";
@@ -34,4 +39,5 @@ buildPythonPackage rec {
     homepage = "https://wwww.open3d.org";
     license = lib.licenses.mit;
   };
+  */
 }

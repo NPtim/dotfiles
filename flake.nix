@@ -16,7 +16,7 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-      py = pkgs-unstable.python3Packages;
+      py = pkgs.python3Packages;
       #pythonEnv = pkgs.python3.withPackages (ps: with ps; [
       #pip setuptools wheel ninja
       #]);
@@ -69,18 +69,16 @@
       };
 
       open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
-        inherit (pkgs) lib fetchurl;
-        inherit (py) buildPythonPackage;
-        inherit pkgs;
+        inherit (pkgs) python3 fetchPypi;
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
-        inherit (pkgs) lib fetchurl;
-        inherit (py)
-        buildPythonPackage setuptools wheel cachetools fire matplotlib
-        numpy opencv-python-headless pillow pyquaternion scikit-learn scipy
-        shapely tqdm parameterized pycocotools;
-        descartes = descartes-1-1-0-python-package;
+        inherit (pkgs) python3 fetchPypi;
+        #inherit (py)
+        #buildPythonPackage setuptools wheel cachetools fire matplotlib
+        #numpy opencv-python-headless pillow pyquaternion scikit-learn scipy
+        #shapely tqdm parameterized pycocotools;
+        # descartes = descartes-1-1-0-python-package;
       };
 
       nerfacc-0-5-2-python-package = pkgs.callPackage ./python-pkgs/nerfacc-0-5-2/default.nix {
@@ -92,7 +90,7 @@
       };
       
       gsplat-1-4-0-python-package = pkgs.callPackage ./python-pkgs/gsplat-1-4-0/default.nix {
-        inherit (pkgs-unstable) python3 lib fetchPypi;
+        inherit (pkgs) python3 lib fetchPypi;
         inherit (py)
         buildPythonPackage setuptools wheel rich ninja numpy jaxtyping
         typing-extensions black build isort pylint pytest pytest-xdist pyyaml
@@ -100,10 +98,29 @@
         torch = torchCuda;
       };
 
+      maturin-1-9-6-python-package = pkgs.callPackage ./python-pkgs/maturin-1-9-6/default.nix {
+        inherit (pkgs) lib buildPythonPackage
+        fetchPypi
+        cargo
+        pkg-config
+        rustPlatform
+        rustc
+        setuptools
+        setuptools-rust
+        tomli
+        bzip2
+        openssl
+        xz
+        zstd
+        stdenv
+        patchelf
+        ziglang;
+        inherit (pkgs.darwin) darwin;
+      };
+
       fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {
-        inherit (pkgs-unstable) python3 fetchPypi;
-        inherit (py)
-        buildPythonPackage;
+        inherit (pkgs) python3 fetchFromGitHub;
+        maturin = maturin-1-9-6-python-package;
       };
 
       everett-3-1-0-python-package = pkgs.callPackage ./python-pkgs/everett-3-1-0/default.nix {
@@ -125,16 +142,16 @@
         python-box = python-box-6-1-0-python-package;
       };
       nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {
-        inherit (pkgs-unstable) lib  fetchFromGitHub python3; 
-        #comet-ml = comet-ml-3-53-1-python-package; 
+        inherit (pkgs) lib fetchFromGitHub python3; 
+        comet-ml = comet-ml-3-53-1-python-package; 
         fpsample = fpsample-0-3-3-python-package;
         gsplat = gsplat-1-4-0-python-package;
         nerfacc = nerfacc-0-5-2-python-package;
         nuscenes-devkit = nuscenes-devkit-1-2-0-python-package;
-        #open3d = open3d-0-19-0-python-package;
-        #splines = splines-0-3-0-python-package;
-        #viser = viser-1-0-0-python-package;
-        #xatlas = xatlas-0-0-11-python-package;
+        open3d = open3d-0-19-0-python-package;
+        splines = splines-0-3-0-python-package;
+        viser = viser-1-0-0-python-package;
+        xatlas = xatlas-0-0-11-python-package;
       };
     in
       {

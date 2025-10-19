@@ -7,7 +7,12 @@
   fpsample,
   gsplat,
   nerfacc,
-  nuscenes-devkit
+  nuscenes-devkit,
+  open3d,
+  splines,
+  xatlas,
+  comet-ml,
+  viser
 }:
 
 python3.pkgs.buildPythonApplication rec {
