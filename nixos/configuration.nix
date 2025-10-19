@@ -17,7 +17,7 @@
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Controller support
-  # hardware.xone.enable = true;
+  hardware.xpadneo.enable = true;
 
   # GPU Settings
   hardware.graphics = {
