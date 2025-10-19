@@ -35,6 +35,11 @@ buildPythonPackage rec {
     wheel
   ];
 
+  propagatedBuildInputs = [
+    configobj
+    pyyaml
+  ];
+
   optional-dependencies = {
     dev = [
       build
@@ -62,8 +67,8 @@ buildPythonPackage rec {
   };
 
   pythonImportsCheck = [
-    "everett"
-  ];
+    "everett" "everett.ext.inifile"
+  ]; 
 
   meta = {
     description = "Configuration library for Python applications";

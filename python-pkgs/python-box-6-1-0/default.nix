@@ -55,7 +55,7 @@ buildPythonPackage rec {
   };
 
   pythonImportsCheck = [
-    "python_box"
+    "box"
   ];
 
   meta = {

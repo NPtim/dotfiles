@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     home-manager = {
      url = "github:nix-community/home-manager?ref=release-25.05";
      inputs.nixpkgs.follows = "nixpkgs";
@@ -10,15 +11,20 @@
     nvf.url = "github:notashelf/nvf";
   };
 
-  outputs = { self, nixpkgs, nvf, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nvf, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
       py = pkgs.python3Packages;
       #pythonEnv = pkgs.python3.withPackages (ps: with ps; [
       #pip setuptools wheel ninja
       #]);
       cuda = pkgs.cudaPackages_11.cudatoolkit; # für nerfstudio
+
+      torchCuda = py.torch.override {
+        cudaSupport = true;
+      };
 
       python-box-6-1-0-python-package = pkgs.callPackage ./python-pkgs/python-box-6-1-0/default.nix {
         inherit (pkgs) lib fetchPypi;
@@ -52,8 +58,9 @@
         buildPythonPackage hatchling imageio msgspec nodeenv numpy opencv-python
         psutil requests rich scikit-image scipy tqdm trimesh tyro websockets
         hypothesis pre-commit pyright pytest ruff gdown matplotlib
-        pandas plotly plyfile pyliblzfse robot-descriptions torch;
+        pandas plotly plyfile pyliblzfse robot-descriptions;
         yourdfpy = yourdfpy-0-0-58-python-package;
+        torch = torchCuda;
       };
 
       splines-0-3-0-python-package = pkgs.callPackage ./python-pkgs/splines-0-3-0/default.nix {
@@ -62,12 +69,13 @@
       };
 
       open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
-        inherit (pkgs) lib fetchPypi;
-        inherit (py) buildPythonPackage setuptools wheel ipywidgets pygments jupyter-packaging jupyterlab;
+        inherit (pkgs) lib fetchurl;
+        inherit (py) buildPythonPackage;
+        inherit pkgs;
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
-        inherit (pkgs) lib fetchPypi;
+        inherit (pkgs) lib fetchurl;
         inherit (py)
         buildPythonPackage setuptools wheel cachetools fire matplotlib
         numpy opencv-python-headless pillow pyquaternion scikit-learn scipy
@@ -78,16 +86,18 @@
       nerfacc-0-5-2-python-package = pkgs.callPackage ./python-pkgs/nerfacc-0-5-2/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
-        buildPythonPackage setuptools wheel rich torch typing-extensions black
+        buildPythonPackage setuptools wheel rich typing-extensions black
         build isort ninja pylint pytest pytest-xdist pyyaml twine typeguard;
+        torch = torchCuda;
       };
       
       gsplat-1-4-0-python-package = pkgs.callPackage ./python-pkgs/gsplat-1-4-0/default.nix {
         inherit (pkgs) lib fetchPypi;
         inherit (py)
-        buildPythonPackage setuptools wheel jaxtyping ninja numpy rich torch
+        buildPythonPackage setuptools wheel jaxtyping ninja numpy rich 
         typing-extensions black build isort pylint pytest pytest-xdist pyyaml
         twine typeguard;
+        torch = torchCuda;
       };
 
       fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {
@@ -225,7 +235,7 @@
         tims-nixos-machine = nixpkgs.lib.nixosSystem {
           inherit system;
 
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs pkgs-unstable; };
 
           modules = [
             ./nixos/configuration.nix

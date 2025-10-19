@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 
 {
   imports =
@@ -15,6 +15,9 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
+
+  # Controller support
+  # hardware.xone.enable = true;
 
   # GPU Settings
   hardware.graphics = {
@@ -98,6 +101,9 @@
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+
+  # enable udisks2
+  services.udisks2.enable = true;
 
   # enable rdp
   services.gnome.gnome-remote-desktop.enable = true;
@@ -196,13 +202,18 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-    spotify
-    libreoffice-qt6-fresh
-    signal-desktop
-    jq
+    pkgs.spotify
+    pkgs.libreoffice-qt6-fresh
+    pkgs.signal-desktop
+    pkgs.jq
+    pkgs.ryujinx
+    pkgs.wineWow64Packages.waylandFull
+    pkgs.unzip
+
+    pkgs-unstable.linuxKernel.packages.linux_6_12.xone
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
