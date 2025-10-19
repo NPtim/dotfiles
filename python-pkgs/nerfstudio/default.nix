@@ -2,15 +2,12 @@
   lib,
   python3,
   fetchFromGitHub,
-  comet-ml,
+  
+  # self-build modules
   fpsample,
   gsplat,
   nerfacc,
-  nuscenes-devkit,
-  open3d,
-  splines,
-  viser,
-  xatlas
+  nuscenes-devkit
 }:
 
 python3.pkgs.buildPythonApplication rec {

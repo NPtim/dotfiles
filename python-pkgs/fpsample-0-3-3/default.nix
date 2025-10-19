@@ -1,50 +1,18 @@
 {
-  lib,
   buildPythonPackage,
-  fetchFromGitHub,
-  cargo,
-  patchelf,
-  rustPlatform,
-  rustc,
-  numpy,
+  fetchPypi,
+  python3
 }:
 
-buildPythonPackage rec {
+python3.pkgs.buildPythonPackage rec {
   pname = "fpsample";
   version = "0.3.3";
-  pyproject = true;
+  format = "wheel";
 
-  src = fetchFromGitHub {
-    owner = "leonardodalinky";
-    repo = "fpsample";
-    rev = "v${version}";
-    hash = "sha256-72XdPis+J3Lb1aa0/AicBqxPtOJb/ZXOsGjMuA/leNI=";
-  };
-
-  cargoDeps = rustPlatform.importCargoLock {
-    lockFile = ./Cargo.lock;
-  };
-
-  build-system = [
-    cargo
-    patchelf
-    rustPlatform.cargoSetupHook
-    rustPlatform.maturinBuildHook
-    rustc
-  ];
-
-  dependencies = [
-    numpy
-  ];
-
-  pythonImportsCheck = [
-    "fpsample"
-  ];
-
-  meta = {
-    description = "Python efficient farthest point sampling (FPS) library. Compatible with numpy";
-    homepage = "https://github.com/leonardodalinky/fpsample/tree/v0.3.3";
-    license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ ];
+  src = fetchPypi rec {
+    inherit pname version format;
+    sha256 = "";
+    dist = python;
+    python = "py3";
   };
 }

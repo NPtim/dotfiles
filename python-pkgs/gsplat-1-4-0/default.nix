@@ -1,4 +1,5 @@
 {
+  python3,
   lib,
   buildPythonPackage,
   fetchPypi,
@@ -21,7 +22,7 @@
   typeguard,
 }:
 
-buildPythonPackage rec {
+python3.pkgs.buildPythonPackage rec {
   pname = "gsplat";
   version = "1.4.0";
   pyproject = true;
