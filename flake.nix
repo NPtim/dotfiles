@@ -69,13 +69,13 @@
       };
 
       open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
-        inherit (pkgs) python3 fetchPypi;
+        inherit (pkgs) lib stdenv fetchFromGitHub cmake python3;
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
-        inherit (pkgs) python3 fetchPypi;
-        #inherit (py)
-        #buildPythonPackage setuptools wheel cachetools fire matplotlib
+        inherit (pkgs) python3 fetchurl;
+        # inherit (py) setuptools;
+        #buildPythonPackage setuptools wheel cachetools fire matplotlib setuptools;
         #numpy opencv-python-headless pillow pyquaternion scikit-learn scipy
         #shapely tqdm parameterized pycocotools;
         # descartes = descartes-1-1-0-python-package;
@@ -99,15 +99,12 @@
       };
 
       maturin-1-9-6-python-package = pkgs.callPackage ./python-pkgs/maturin-1-9-6/default.nix {
-        inherit (pkgs) lib buildPythonPackage
+        inherit (pkgs) lib
         fetchPypi
         cargo
         pkg-config
         rustPlatform
         rustc
-        setuptools
-        setuptools-rust
-        tomli
         bzip2
         openssl
         xz
@@ -115,11 +112,14 @@
         stdenv
         patchelf
         ziglang;
+        inherit (py) buildPythonPackage setuptools
+        tomli
+        setuptools-rust;
         inherit (pkgs.darwin) darwin;
       };
 
       fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {
-        inherit (pkgs) python3 fetchFromGitHub;
+        inherit (pkgs) python3 fetchFromGitHub autoPatchelfHook;
         maturin = maturin-1-9-6-python-package;
       };
 

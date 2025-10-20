@@ -1,7 +1,8 @@
 {
   python3,
   fetchFromGitHub,
-  maturin
+  maturin,
+  autoPatchelfHook,
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -18,5 +19,6 @@ python3.pkgs.buildPythonPackage rec {
 
   build-system = [
     maturin
+    autoPatchelfHook
   ];
 }

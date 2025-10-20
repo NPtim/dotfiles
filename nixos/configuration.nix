@@ -16,7 +16,7 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  # Controller support
+  # Controller support (bluetooth)
   hardware.xpadneo.enable = true;
 
   # GPU Settings
@@ -220,8 +220,9 @@
     pkgs.ryujinx
     pkgs.wineWow64Packages.waylandFull
     pkgs.unzip
+    pkgs.obsidian
 
-    pkgs-unstable.linuxKernel.packages.linux_6_12.xone
+    pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
