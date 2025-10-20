@@ -221,6 +221,9 @@
     pkgs.wineWow64Packages.waylandFull
     pkgs.unzip
     pkgs.obsidian
+    pkgs.cmatrix # cool
+    pkgs.discord
+
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
   ];
