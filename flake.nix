@@ -69,7 +69,7 @@
       };
 
       open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
-        inherit (pkgs) lib stdenv fetchFromGitHub cmake python3;
+        inherit (pkgs) lib stdenv fetchFromGitHub cmake python3 patchelfUnstable autoPatchelfHook;
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
@@ -110,17 +110,26 @@
         xz
         zstd
         stdenv
-        patchelf
         ziglang;
         inherit (py) buildPythonPackage setuptools
         tomli
         setuptools-rust;
         inherit (pkgs.darwin) darwin;
+        patchelf = pkgs.patchelfUnstable;
+      };
+
+      patchelf-0-17-2-4-python-package = pkgs.callPackage ./python-pkgs/patchelf-0-17-2-4/default.nix {
+        inherit (pkgs) lib fetchPypi;
+        inherit (py) buildPythonPackage scikit-build-core pytest importlib-metadata;
       };
 
       fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {
-        inherit (pkgs) python3 fetchFromGitHub autoPatchelfHook;
+        inherit (pkgs) 
+        python3 
+        fetchFromGitHub;
+
         maturin = maturin-1-9-6-python-package;
+        patchelf = patchelf-0-17-2-4-python-package;
       };
 
       everett-3-1-0-python-package = pkgs.callPackage ./python-pkgs/everett-3-1-0/default.nix {
@@ -141,6 +150,7 @@
         semantic-version sentry-sdk simplejson urllib3 wrapt wurlitzer;
         python-box = python-box-6-1-0-python-package;
       };
+
       nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {
         inherit (pkgs) lib fetchFromGitHub python3; 
         comet-ml = comet-ml-3-53-1-python-package; 
@@ -153,6 +163,7 @@
         viser = viser-1-0-0-python-package;
         xatlas = xatlas-0-0-11-python-package;
       };
+
     in
       {
       tims-neovim = (nvf.lib.neovimConfiguration {

@@ -1,8 +1,9 @@
 {
   python3,
   fetchFromGitHub,
+
   maturin,
-  autoPatchelfHook,
+  patchelf
 }:
 
 python3.pkgs.buildPythonPackage rec {
@@ -17,8 +18,8 @@ python3.pkgs.buildPythonPackage rec {
     sha256 = "72XdPis+J3Lb1aa0/AicBqxPtOJb/ZXOsGjMuA/leNI=";
   };
 
-  build-system = [
+  nativeBuildInputs = [
     maturin
-    autoPatchelfHook
+    patchelf
   ];
 }

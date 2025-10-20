@@ -3,7 +3,9 @@
   stdenv,
   fetchFromGitHub,
   cmake,
-  python3
+  python3,
+  patchelfUnstable,
+  autoPatchelfHook
 }:
 
 stdenv.mkDerivation rec {
@@ -20,6 +22,8 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     python3
+    patchelfUnstable
+    autoPatchelfHook
   ];
 
   meta = {
