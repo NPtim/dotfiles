@@ -222,7 +222,13 @@ in
       key = "<C-d>";
       mode = "i";
       action = "{}<Esc>i";
-      desc = "quick braces makro";
+      desc = "quick curly braces makro";
+    }
+    {
+      key = "<C-ö>";
+      mode = "i";
+      action = "[]<Esc>i";
+      desc = "quick square braces makro";
     }
   ];
 

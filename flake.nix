@@ -119,8 +119,15 @@
       };
 
       patchelf-0-17-2-4-python-package = pkgs.callPackage ./python-pkgs/patchelf-0-17-2-4/default.nix {
-        inherit (pkgs) lib fetchPypi;
-        inherit (py) buildPythonPackage scikit-build-core pytest importlib-metadata;
+        inherit (pkgs) lib fetchFromGitHub
+          cmake
+          ninja
+          autoconf
+          automake
+          libtool
+          gettext
+          help2man;
+        inherit (py) buildPythonPackage scikit-build setuptools setuptools-scm wheel;
       };
 
       fpsample-0-3-3-python-package = pkgs.callPackage ./python-pkgs/fpsample-0-3-3/default.nix {

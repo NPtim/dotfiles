@@ -1,41 +1,62 @@
 {
   lib,
   buildPythonPackage,
-  fetchPypi,
-  scikit-build-core,
-  importlib-metadata,
-  pytest,
+  fetchFromGitHub,
+  scikit-build,
+  setuptools,
+  setuptools-scm,
+  wheel,
+  cmake,
+  ninja,
+  autoconf,
+  automake,
+  libtool,
+  gettext,
+  help2man,
 }:
 
 buildPythonPackage rec {
-  pname = "patchelf";
-  version = "0.17.2.4";
+  pname = "patchelf-pypi";
+  version = "0.18.0.0";
   pyproject = true;
 
-  src = fetchPypi {
-    inherit pname version;
-    hash = "sha256-lw7lzYrzPl6iCZUQsvkBP6G41c12O/P9OWEoHBgQGgk=";
+  src = fetchFromGitHub {
+    owner = "mayeut";
+    repo = "patchelf-pypi";
+    rev = "v${version}";
+    hash = "sha256-Zcx46OfQiZHmCi7byrhgwGPl5eINB4mJw2tFcpgNFrY=";
+    fetchSubmodules = true;
   };
 
   build-system = [
-    scikit-build-core
+    scikit-build
+    setuptools
+    setuptools-scm
+    wheel
   ];
 
-  optional-dependencies = {
-    test = [
-      importlib-metadata
-      pytest
-    ];
-  };
+  nativeBuildInputs = [
+    cmake
+    ninja
+    autoconf
+    automake
+    libtool
+    gettext
+    help2man
+  ];
+
+  dontUseCmakeConfigure = true;
+  dontUseCmakeBuild = true;
+  dontUseCmakeInstall = true;
 
   pythonImportsCheck = [
-    "patchelf"
+    "patchelf_pypi"
   ];
 
   meta = {
-    description = "A small utility to modify the dynamic linker and RPATH of ELF executables";
-    homepage = "https://pypi.org/project/patchelf/0.17.2.4/";
-    license = with lib.licenses; [ asl20 gpl3Only ];
+    description = "Pip install patchelf. patchelf Python wheel for PyPI";
+    homepage = "https://github.com/mayeut/patchelf-pypi/tree/v0.18.0.0";
+    license = with lib.licenses; [ gpl3Only asl20 ];
     maintainers = with lib.maintainers; [ ];
   };
 }

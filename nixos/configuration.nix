@@ -223,6 +223,7 @@
     pkgs.obsidian
     pkgs.cmatrix # cool
     pkgs.discord
+    pkgs.nvtopPackages.nvidia
 
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
