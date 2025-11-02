@@ -233,6 +233,7 @@
   virtualisation.virtualbox.host = {
     enable = true;
     enableKvm = true;
+    addNetworkInterface = false; # for KVM to work
   };
 
   # Some programs need SUID wrappers, can be configured further or are
