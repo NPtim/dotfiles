@@ -215,7 +215,7 @@
   #  wget
     pkgs.spotify
     pkgs.libreoffice-qt6-fresh
-    pkgs.signal-desktop
+    # pkgs.signal-desktop
     pkgs.jq
     pkgs.ryujinx
     pkgs.wineWow64Packages.waylandFull
@@ -227,7 +227,13 @@
 
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
+    pkgs-unstable.signal-desktop
   ];
+
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableKvm = true;
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
