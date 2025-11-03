@@ -144,6 +144,11 @@
 
   programs.tmux.enable = true;
 
+  programs.obs-studio = {
+    enable = true;
+    package = pkgs.obs-studio.override {cudaSupport = true;};
+  };
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "de";
@@ -224,7 +229,7 @@
     pkgs.cmatrix # cool
     pkgs.discord
     pkgs.nvtopPackages.nvidia
-
+    pkgs.vlc
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop

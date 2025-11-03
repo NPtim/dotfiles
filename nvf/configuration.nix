@@ -37,7 +37,8 @@ in
       shiftwidth = 2;
       expandtab = true;
       
-      autoindent = true;
+      smartindent = false;
+      autoindent = false;
 
       number = true;
       relativenumber = false;
@@ -60,7 +61,7 @@ in
     };
     autocomplete.nvim-cmp = {
       enable = true;
-      mappings.confirm = null;
+      setupOpts.completion.completeopt = "noselect";
     };
     assistant.copilot = {
       enable = true;
@@ -80,10 +81,29 @@ in
     languages = {
       enableTreesitter = true;
 
-      nix.enable = true;
+      nix = {
+        enable = true;
+        lsp.enable = true;
+      };
       lua.enable = true;
-      clang.enable = true;
+      clang = {
+        enable = true;
+        lsp.enable = true;
+      };
     };
+
+    treesitter = {
+      enable = true;
+      fold = true;
+      grammars = pkgs.vimPlugins.nvim-treesitter.allGrammars;
+      highlight.enable = true;
+      indent.enable = true;
+      incrementalSelection.enable = true;
+      textobjects.enable = true;
+      context.enable = true;
+    };
+
+    autopairs.nvim-autopairs.enable = true;
   };
 
   # keymaps
