@@ -148,6 +148,11 @@
     enable = true;
     package = pkgs.obs-studio.override {cudaSupport = true;};
   };
+  
+  programs.steam = {
+    enable = true;
+    gamescopeSession.enable = true;
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -230,10 +235,16 @@
     pkgs.discord
     pkgs.nvtopPackages.nvidia
     pkgs.vlc
+    # pkgs.mangohud (fps counter) :)
+    pkgs.protonup
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
   ];
+
+  environment.sessionVariables = {
+    STEAM_EXTRA_COMPAT_TOOLS_PATH = "${config.users.users.tim.home}/.steam/root/compatibilitytools.d";
+  };
 
   virtualisation.virtualbox.host = {
     enable = true;
