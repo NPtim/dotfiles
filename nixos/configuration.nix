@@ -126,6 +126,10 @@
           "org/gnome/desktop/wm/preferences" = {
             button-layout = ":minimize,maximize,close";
           };
+
+          "org/gnome/mutter" = {
+            workspaces-only-on-primary = true;
+          };
         };
       }
       {
@@ -237,6 +241,8 @@
     pkgs.vlc
     # pkgs.mangohud (fps counter) :)
     pkgs.protonup
+    # pkgs.keepass
+    pkgs.keepassxc
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
