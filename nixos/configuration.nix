@@ -128,10 +128,12 @@
           };
 
           "org/gnome/mutter" = {
-            workspaces-only-on-primary = true;
+            workspaces-only-on-primary = false;
           };
+
         };
       }
+
       {
       lockAll = false;
       settings = {
