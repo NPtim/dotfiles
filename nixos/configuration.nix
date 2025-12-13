@@ -233,7 +233,7 @@
     pkgs.libreoffice-qt6-fresh
     # pkgs.signal-desktop
     pkgs.jq
-    pkgs.ryujinx
+    pkgs.ryubing
     pkgs.wineWow64Packages.waylandFull
     pkgs.unzip
     pkgs.obsidian
@@ -242,9 +242,11 @@
     pkgs.nvtopPackages.nvidia
     pkgs.vlc
     # pkgs.mangohud (fps counter) :)
-    pkgs.protonup
+    pkgs.protonup-ng
     # pkgs.keepass
     pkgs.keepassxc
+    pkgs.xsnow
+    pkgs.iftop
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
