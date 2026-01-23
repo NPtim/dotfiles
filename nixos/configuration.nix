@@ -221,6 +221,10 @@
     flake = "/home/tim/dotfiles"; # TODO
   };
 
+  programs.hyprland = {
+    enable = true;
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

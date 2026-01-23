@@ -1,6 +1,11 @@
 {config, pkgs, ...}:
 
 {
+  wayland.windowManager.hyprland = {
+    enable = true;
+    extraConfig = ''this is a test for the config with another word'';
+  };
+
   programs = {
     firefox = {
       enable = false;
