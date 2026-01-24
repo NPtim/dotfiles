@@ -251,6 +251,8 @@
     pkgs.keepassxc
     pkgs.xsnow
     pkgs.iftop
+    # hyprland stuff
+    pkgs.rofi
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
