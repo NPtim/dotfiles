@@ -3,7 +3,21 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = ''this is a test for the config with another word'';
+
+    settings = {
+      monitor = [
+        "DP-2, 2560x1440@240, 0x0, 1"
+        "HDMI-1, 3840x2160@60, 2560x0, 1.5"
+      ];
+
+      "$terminal" = "kitty";
+      "$mainMod" = "SUPER";
+
+      bind = [
+        "$mainMod, Q, exec, $terminal"
+        "bind = $mainMod, M, exec, command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"
+      ];
+    };
   };
 
   programs = {
