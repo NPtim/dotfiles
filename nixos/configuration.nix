@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, pkgs-unstable, ... }:
+{ config, pkgs, pkgs-unstable, inputs, ... }:
 
 {
   imports =
@@ -221,8 +221,16 @@
     flake = "/home/tim/dotfiles"; # TODO
   };
 
+  # hyprland
   programs.hyprland = {
     enable = true;
+  };
+
+  security.polkit.enable = true;
+
+  programs.hyprlock = {
+    enable = true;
+    
   };
 
   # Allow unfree packages
@@ -253,6 +261,7 @@
     pkgs.iftop
     # hyprland stuff
     pkgs.rofi
+    pkgs.hyprpolkitagent
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
