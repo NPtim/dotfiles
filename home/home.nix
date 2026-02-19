@@ -30,7 +30,7 @@
         "$mainMod, M, exec, command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"
         "$mainMod, D, exec, pkill rofi || rofi -show drun"
         "$mainMod, E, exec, $fileManager"
-        "$mainMod, L, exec, hyprlock"
+        "$mainMod SHIFT, L, exec, hyprlock"
 
         "$mainMod, V, togglefloating, "
 
