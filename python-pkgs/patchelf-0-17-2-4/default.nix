@@ -16,7 +16,7 @@
 }:
 
 buildPythonPackage rec {
-  pname = "patchelf-pypi";
+  pname = "patchelf";
   version = "0.18.0.0";
   pyproject = true;
 

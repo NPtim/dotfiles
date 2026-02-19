@@ -17,6 +17,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
       pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
       py = pkgs.python3Packages;
+      py313 = pkgs.python313Packages;
       #pythonEnv = pkgs.python3.withPackages (ps: with ps; [
       #pip setuptools wheel ninja
       #]);
@@ -67,9 +68,16 @@
         inherit (pkgs) lib fetchPypi;
         inherit (py) buildPythonPackage setuptools wheel numpy;
       };
+      
+      /*
+      open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
+        inherit (pkgs) lib stdenv fetchFromGitHub cmake python3 patchelfUnstable autoPatchelfHook git qhull;
+        inherit (py313) pybind11;
+      };
+      */
 
       open3d-0-19-0-python-package = pkgs.callPackage ./python-pkgs/open3d-0-19-0/default.nix {
-        inherit (pkgs) lib stdenv fetchFromGitHub cmake python3 patchelfUnstable autoPatchelfHook;
+        inherit (pkgs) python3 autoPatchelfHook stdenv;
       };
 
       nuscenes-devkit-1-2-0-python-package = pkgs.callPackage ./python-pkgs/nuscenes-devkit-1-2-0/default.nix {
@@ -159,7 +167,7 @@
       };
 
       nerfstudio-python-package = import ./python-pkgs/nerfstudio/default.nix {
-        inherit (pkgs) lib fetchFromGitHub python3; 
+        inherit (pkgs) lib python3 fetchFromGitHub makeWrapper; 
         comet-ml = comet-ml-3-53-1-python-package; 
         fpsample = fpsample-0-3-3-python-package;
         gsplat = gsplat-1-4-0-python-package;
@@ -178,10 +186,17 @@
         modules = [ ./nvf/configuration.nix ];
       }).neovim;
 
+      packages.${system}.nerfstudio = nerfstudio-python-package;
+
+      apps.${system}.ns-train = {
+        type = "app";
+        program = "${self.packages.${system}.nerfstudio}/bin/ns-train";
+      };
+
       # gaussian splatting dev shell
       devShells.${system} = {
         nerfstudio = pkgs.mkShell {
-          packages = [
+          nativeBuildInputs = [
             pkgs.python3
             nerfstudio-python-package
           ];

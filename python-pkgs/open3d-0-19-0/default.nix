@@ -1,38 +1,26 @@
 {
-  lib,
-  stdenv,
-  fetchFromGitHub,
-  cmake,
   python3,
-  patchelfUnstable,
-  autoPatchelfHook
+  autoPatchelfHook,
+  stdenv
 }:
 
-stdenv.mkDerivation rec {
-  pname = "open3-d";
-  version = "0.19.0";
+python3.pkgs.buildPythonPackage rec {
+  pname = "open3d";
+  version = "0.18.0";  # letzte Version mit Wheel für dein Python
+  format = "wheel";
 
-  src = fetchFromGitHub {
-    owner = "isl-org";
-    repo = "Open3D";
-    rev = "v${version}";
-    hash = "sha256-jWjtfDcjDBOQHH4s2e1P8ye19JlucYIZPi0pgvOsdcA=";
+  src = python3.pkgs.fetchPypi {
+    inherit pname version;
+    format = "wheel";
+    dist = "cp313";
+    python = "cp313";
+    abi = "cp313";
+    platform = "manylinux_2_27_x86_64.manylinux2014_x86_64";  # prüfe genau
+    hash = "sha256-...";
   };
 
-  nativeBuildInputs = [
-    cmake
-    python3
-    patchelfUnstable
-    autoPatchelfHook
-  ];
+  nativeBuildInputs = [ autoPatchelfHook ];
+  buildInputs = [ stdenv.cc.cc.lib ];
 
-  meta = {
-    description = "Open3D: A Modern Library for 3D Data Processing";
-    homepage = "https://github.com/isl-org/Open3D/tree/v0.19.0";
-    changelog = "https://github.com/isl-org/Open3D/blob/${src.rev}/CHANGELOG.md";
-    license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ ];
-    mainProgram = "open3-d";
-    platforms = lib.platforms.all;
-  };
+  pythonImportsCheck = [ "open3d" ];
 }

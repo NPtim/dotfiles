@@ -2,6 +2,7 @@
   lib,
   python3,
   fetchFromGitHub,
+  makeWrapper,
   
   # self-build modules
   fpsample,
@@ -26,6 +27,10 @@ python3.pkgs.buildPythonApplication rec {
     rev = "v${version}";
     hash = "sha256-UmjvNv0yrOrTvVk1r5GEq9Kjnj+hMIK7ag16N8w7F8o=";
   };
+
+  nativeBuildInputs = [
+    makeWrapper
+  ];
 
   build-system = [
     python3.pkgs.setuptools
@@ -128,11 +133,32 @@ python3.pkgs.buildPythonApplication rec {
     "nerfstudio"
   ];
 
+  postInstall = ''
+    for cmd in \
+      "ns-train=nerfstudio.scripts.train:entrypoint" \
+      "ns-process-data=nerfstudio.scripts.process_data:entrypoint" \
+      "ns-viewer=nerfstudio.scripts.viewer.run_viewer:entrypoint" \
+      "ns-eval=nerfstudio.scripts.eval:entrypoint" \
+      "ns-render=nerfstudio.scripts.render:entrypoint" \
+      "ns-export=nerfstudio.scripts.exporter:entrypoint" \
+      "ns-install-cli=nerfstudio.scripts.completions.install:entrypoint" \
+      "ns-download-data=nerfstudio.scripts.downloads.download_data:entrypoint"
+    do
+      name="''${cmd%%=*}"
+      mod="''${cmd#*=}"
+      module="''${mod%%:*}"
+      func="''${mod#*:}"
+      makeWrapper ${python3.interpreter} $out/bin/$name \
+        --prefix PYTHONPATH : "$out/${python3.sitePackages}" \
+        --add-flags "-c 'from $module import $func; $func()'"
+    done
+  '';
+
   meta = {
     description = "A collaboration friendly studio for NeRFs";
     homepage = "https://github.com/nerfstudio-project/nerfstudio/tree/main";
     license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [ ];
-    mainProgram = "nerfstudio";
+    mainProgram = "ns-train";
   };
 }
