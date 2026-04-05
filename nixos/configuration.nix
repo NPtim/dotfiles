@@ -263,6 +263,9 @@
     pkgs.rofi
     pkgs.hyprpolkitagent
 
+    pkgs.colmapWithCuda
+    pkgs.opensplatWithCuda
+
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
   ];
