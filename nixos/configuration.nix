@@ -14,7 +14,18 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings = {
+    experimental-features = ["nix-command" "flakes"];
+
+    substituters = [ 
+      "https://nix-community.cachix.org" 
+      "https://cache.nixos-cuda.org"
+    ];
+    trusted-public-keys = [ 
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+    ];
+  };
 
   # Controller support (bluetooth)
   hardware.xpadneo.enable = true;
@@ -58,6 +69,8 @@
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
+
+  hardware.nvidia-container-toolkit.enable = true;
 
   systemd.sleep.extraConfig = ''
     AllowSuspend=no
@@ -203,7 +216,7 @@
   users.users.tim = {
     isNormalUser = true;
     description = "Tim";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -264,7 +277,14 @@
     pkgs.hyprpolkitagent
 
     pkgs.colmapWithCuda
-    pkgs.opensplatWithCuda
+    pkgs-unstable.opensplatWithCuda #TODO: crashes when trying to install?
+
+    pkgs.opendrop
+    pkgs.owl
+    pkgs.iw
+
+    pkgs.kismet
+    pkgs.wavemon
 
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
@@ -274,10 +294,14 @@
     STEAM_EXTRA_COMPAT_TOOLS_PATH = "${config.users.users.tim.home}/.steam/root/compatibilitytools.d";
   };
 
-  virtualisation.virtualbox.host = {
-    enable = true;
-    enableKvm = true;
-    addNetworkInterface = false; # for KVM to work
+  virtualisation = {
+    virtualbox.host = {
+      enable = true;
+      enableKvm = true;
+      addNetworkInterface = false; # for KVM to work
+    };
+    
+    docker.enable = true;
   };
 
   virtualisation.libvirtd.enable = true;
