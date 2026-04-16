@@ -276,8 +276,8 @@
     pkgs.rofi
     pkgs.hyprpolkitagent
 
-    pkgs.colmapWithCuda
-    pkgs-unstable.opensplatWithCuda #TODO: crashes when trying to install?
+    #pkgs.colmapWithCuda
+    #pkgs-unstable.opensplatWithCuda #TODO: crashes when trying to install?
 
     pkgs.opendrop
     pkgs.owl
@@ -319,6 +319,34 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  # Enable samba service
+  services.samba = {
+    enable = false;
+    securityType = "user";
+    openFirewall = true;
+
+    settings = {
+      global = {
+        "workgroup" = "WORKGROUP";
+        "server string" = "${config.networking.hostName}";
+        "security" = "user"; # redundant?
+        "map to guest" = "never";
+        "use sendfile" = "yes";
+        "max protocol" = "smb3";
+        "fruit:aapl" = "yes";
+        "vfs objects" = "catia fruit streams_xattr";
+      };
+      "private" = {
+        "path" = "/home/tim";
+        "browsable"= "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0664";
+        "directory mask" = "0775";
+      };
+    };
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
