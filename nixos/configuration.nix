@@ -291,6 +291,8 @@
     pkgs.kismet
     pkgs.wavemon
 
+    pkgs.ncdu
+
     pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
     pkgs-unstable.signal-desktop
   ];
@@ -321,6 +323,8 @@
   # };
 
   # List services that you want to enable:
+  
+  services.zerotierone.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
