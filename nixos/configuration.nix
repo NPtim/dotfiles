@@ -112,8 +112,8 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # enable udisks2
   services.udisks2.enable = true;
@@ -332,7 +332,6 @@
   # Enable samba service
   services.samba = {
     enable = false;
-    securityType = "user";
     openFirewall = true;
 
     settings = {

@@ -32,9 +32,9 @@ in
 
     # tab configuration ... don't ask me why every option has to be set idk
     options = {
-      tabstop = 2;
-      softtabstop = 2;
-      shiftwidth = 2;
+      tabstop = 4;
+      softtabstop = 4;
+      shiftwidth = 4;
       expandtab = true;
       
       smartindent = false;
