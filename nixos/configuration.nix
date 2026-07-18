@@ -18,50 +18,10 @@
     experimental-features = ["nix-command" "flakes"];
   };
 
-  # Controller support (bluetooth)
-  hardware.xpadneo.enable = true;
-
   # GPU Settings
   hardware.graphics = {
     enable = true;
   };
-
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
-
-  hardware.nvidia = {
-
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
-    # of just the bare essentials.
-    powerManagement.enable = true;
-
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-    # Only available from driver 515.43.04+
-    # recommended by NVIDIA to be set to true for my card (RTX 3080)
-    open = true;
-
-    # Enable the Nvidia settings menu,
-	  # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
-  };
-
-  hardware.nvidia-container-toolkit.enable = true;
 
   systemd.sleep.extraConfig = ''
     AllowSuspend=no
@@ -71,7 +31,7 @@
   '';
 
   # Networking 
-  networking.hostName = "tims-nixos-machine"; # Define your hostname.
+  networking.hostName = "TODO"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -109,14 +69,6 @@
   # enable udisks2
   services.udisks2.enable = true;
 
-  # enable rdp
-  services.gnome.gnome-remote-desktop.enable = true;
-  networking.firewall.allowedTCPPorts = [ 3389 ];
-
-  systemd.services.gnome-remote-desktop = {
-    wantedBy = [ "graphical.target" ];
-  };
-
   services.displayManager.autoLogin.enable = false;
   services.getty.autologinUser = null;
 
@@ -153,17 +105,7 @@
   };
 
   programs.tmux.enable = true;
-
-  programs.obs-studio = {
-    enable = true;
-    package = pkgs.obs-studio.override {cudaSupport = true;};
-  };
   
-  programs.steam = {
-    enable = true;
-    gamescopeSession.enable = true;
-  };
-
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "de";
@@ -192,14 +134,6 @@
     #media-session.enable = true;
   };
 
-  # enable sunshine 
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
-
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -225,17 +159,7 @@
     flake = "/home/tim/dotfiles"; # TODO
   };
 
-  # hyprland
-  programs.hyprland = {
-    enable = true;
-  };
-
   security.polkit.enable = true;
-
-  programs.hyprlock = {
-    enable = true;
-    
-  };
 
   programs.htop = {
     enable = true;
@@ -254,23 +178,13 @@
     pkgs.libreoffice-qt6-fresh
     # pkgs.signal-desktop
     pkgs.jq
-    pkgs.ryubing
-    pkgs.wineWow64Packages.waylandFull
     pkgs.unzip
     pkgs.obsidian
-    pkgs.cmatrix # cool
-    pkgs.discord
-    pkgs.nvtopPackages.nvidia
     pkgs.vlc
     # pkgs.mangohud (fps counter) :)
-    pkgs.protonup-ng
     # pkgs.keepass
-    pkgs.keepassxc
-    pkgs.xsnow
     pkgs.iftop
     # hyprland stuff
-    pkgs.rofi
-    pkgs.hyprpolkitagent
 
     #pkgs.colmapWithCuda
     #pkgs-unstable.opensplatWithCuda #TODO: crashes when trying to install?
@@ -283,27 +197,7 @@
     pkgs.wavemon
 
     pkgs.ncdu
-
-    pkgs-unstable.linuxKernel.packages.linux_6_12.xone # Controller support (wired)
-    pkgs-unstable.signal-desktop
   ];
-
-  environment.sessionVariables = {
-    STEAM_EXTRA_COMPAT_TOOLS_PATH = "${config.users.users.tim.home}/.steam/root/compatibilitytools.d";
-  };
-
-  virtualisation = {
-    virtualbox.host = {
-      enable = true;
-      enableKvm = true;
-      addNetworkInterface = false; # for KVM to work
-    };
-    
-    docker.enable = true;
-  };
-
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -314,38 +208,10 @@
   # };
 
   # List services that you want to enable:
-  
   services.zerotierone.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-
-  # Enable samba service
-  services.samba = {
-    enable = false;
-    openFirewall = true;
-
-    settings = {
-      global = {
-        "workgroup" = "WORKGROUP";
-        "server string" = "${config.networking.hostName}";
-        "security" = "user"; # redundant?
-        "map to guest" = "never";
-        "use sendfile" = "yes";
-        "max protocol" = "smb3";
-        "fruit:aapl" = "yes";
-        "vfs objects" = "catia fruit streams_xattr";
-      };
-      "private" = {
-        "path" = "/home/tim";
-        "browsable"= "yes";
-        "read only" = "no";
-        "guest ok" = "no";
-        "create mask" = "0664";
-        "directory mask" = "0775";
-      };
-    };
-  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -360,5 +226,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
-
 }
