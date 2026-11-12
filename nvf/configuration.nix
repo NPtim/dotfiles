@@ -64,7 +64,7 @@ in
       setupOpts.completion.completeopt = "noselect";
     };
     assistant.copilot = {
-      enable = true;
+      enable = false;
       cmp.enable = true;
       
       mappings.suggestion = {
